@@ -12,14 +12,19 @@ genus = sys.argv[2]
 species = sys.argv[3]
 gene = sys.argv[4]
 
+Nbsequences = input('How many sequences do you want to download (max) ?')
+
 Entrez.email = "%s" % (email)
 
-handle = Entrez.esearch(db="nucleotide", term='%s AND "%s %s"[Organism]' % (gene, genus, species))
+handle = Entrez.esearch(db="nucleotide", term='%s AND "%s %s"[Organism]' % (gene, genus, species), retmax = Nbsequences)
 rec_list = Entrez.read(handle)
 handle.close()
 
 nbrecords = len(rec_list['IdList'])
 print('the ncbi nucleotide database had', nbrecords, 'sequences corresponding to your request')
+
+if nbrecords == 0:
+    exit()
 
 id_list = rec_list['IdList']
 handle = Entrez.efetch(db='nucleotide', id=id_list, rettype='gb')
